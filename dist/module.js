@@ -3,12 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUpWithEmail = exports.signInWithEmail = exports.init = exports.getWorkoutsIds = exports.getWorkout = exports.getSharedWorkoutsIds = exports.getOwnedWorkoutsIds = exports.getFriendsIds = exports.getExercisesIds = exports.getExercise = exports.addWorkout = exports.addSharedWorkouts = exports.addOwnedWorkouts = exports.addFriend = exports.addExercise = void 0;
+exports.signUpWithEmail = exports.signInWithEmail = exports.init = exports.getWorkoutsIds = exports.getWorkout = exports.getUsersIds = exports.getUser = exports.getSharedWorkoutsIds = exports.getOwnedWorkoutsIds = exports.getFriendsIds = exports.getExercisesIds = exports.getExercise = exports.addWorkout = exports.addSharedWorkouts = exports.addOwnedWorkouts = exports.addFriend = exports.addExercise = void 0;
 const init_1 = __importDefault(require("./src/init"));
 exports.init = init_1.default;
 const auth_1 = require("./src/auth");
 Object.defineProperty(exports, "addFriend", { enumerable: true, get: function () { return auth_1.addFriend; } });
 Object.defineProperty(exports, "getFriendsIds", { enumerable: true, get: function () { return auth_1.getFriendsIds; } });
+Object.defineProperty(exports, "getUser", { enumerable: true, get: function () { return auth_1.getUser; } });
+Object.defineProperty(exports, "getUsersIds", { enumerable: true, get: function () { return auth_1.getUsersIds; } });
 Object.defineProperty(exports, "signInWithEmail", { enumerable: true, get: function () { return auth_1.signInWithEmail; } });
 Object.defineProperty(exports, "signUpWithEmail", { enumerable: true, get: function () { return auth_1.signUpWithEmail; } });
 const workouts_1 = require("./src/workouts");

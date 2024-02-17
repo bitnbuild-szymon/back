@@ -4,8 +4,10 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
   getFirestore,
   setDoc,
   updateDoc,
@@ -160,6 +162,30 @@ async function getProfile(uid: string): Promise<UserProfile> {
 }
 
 export { signInWithEmail, signUpWithEmail };
+
+async function getUsersIds(): Promise<string[]> {
+  const db = getFirestore();
+
+  const users = await getDocs(collection(db, "users"));
+  return users.docs.map((doc: any) => doc.id);
+}
+async function getUser(uid: string): Promise<UserProfile> {
+  const db = getFirestore();
+
+  const user = await getDoc(doc(db, "users", uid));
+
+  if (user.exists()) {
+    const data = user.data();
+    return {
+      id: user.id,
+      username: data.username,
+    } as UserProfile;
+  } else {
+    throw new Error("User not found");
+  }
+}
+
+export { getUser, getUsersIds };
 
 async function getFriendsIds(uid: string): Promise<string[]> {
   const db = getFirestore();

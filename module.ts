@@ -2,6 +2,8 @@ import init from "./src/init";
 import {
   addFriend,
   getFriendsIds,
+  getUser,
+  getUsersIds,
   signInWithEmail,
   signUpWithEmail,
 } from "./src/auth";
@@ -29,6 +31,8 @@ export {
   getFriendsIds,
   getOwnedWorkoutsIds,
   getSharedWorkoutsIds,
+  getUser,
+  getUsersIds,
   getWorkout,
   getWorkoutsIds,
   init,

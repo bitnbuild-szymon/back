@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFriendsIds = exports.addFriend = exports.signUpWithEmail = exports.signInWithEmail = void 0;
+exports.getFriendsIds = exports.addFriend = exports.getUsersIds = exports.getUser = exports.signUpWithEmail = exports.signInWithEmail = void 0;
 const auth_1 = require("firebase/auth");
 const firestore_1 = require("firebase/firestore");
 async function signUpWithEmail(email, password, username) {
@@ -112,6 +112,27 @@ async function getProfile(uid) {
         username: data.username,
     };
 }
+async function getUsersIds() {
+    const db = (0, firestore_1.getFirestore)();
+    const users = await (0, firestore_1.getDocs)((0, firestore_1.collection)(db, "users"));
+    return users.docs.map((doc) => doc.id);
+}
+exports.getUsersIds = getUsersIds;
+async function getUser(uid) {
+    const db = (0, firestore_1.getFirestore)();
+    const user = await (0, firestore_1.getDoc)((0, firestore_1.doc)(db, "users", uid));
+    if (user.exists()) {
+        const data = user.data();
+        return {
+            id: user.id,
+            username: data.username,
+        };
+    }
+    else {
+        throw new Error("User not found");
+    }
+}
+exports.getUser = getUser;
 async function getFriendsIds(uid) {
     const db = (0, firestore_1.getFirestore)();
     const userSnap = await (0, firestore_1.getDoc)((0, firestore_1.doc)(db, "users", uid));
