@@ -1,4 +1,4 @@
 import init from "./src/init.ts";
-import { signUpWithEmail } from "./src/auth.ts";
+import { signInWithEmail, signUpWithEmail } from "./src/auth.ts";
 
-export { init, signUpWithEmail };
+export { init, signInWithEmail, signUpWithEmail };

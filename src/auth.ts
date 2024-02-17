@@ -1,4 +1,8 @@
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 async function signUpWithEmail(email, password) {
   if (!email || !password) {
@@ -30,15 +34,11 @@ async function signUpWithEmail(email, password) {
   const auth = getAuth();
 
   if (!auth) {
-    throw new Error("Firebase auth is not initialized");
+    throw new Error("Internal server error");
   }
 
   try {
-    return await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
+    return await createUserWithEmailAndPassword(auth, email, password);
   } catch (e) {
     if (e.code === "auth/email-already-in-use") {
       throw new Error("Email address is already in use");
@@ -48,4 +48,32 @@ async function signUpWithEmail(email, password) {
   }
 }
 
-export { signUpWithEmail };
+async function signInWithEmail(email, password) {
+  if (!email || !password) {
+    throw new Error("Email and password are required");
+  }
+
+  const auth = getAuth();
+
+  if (!auth) {
+    throw new Error("Internal server error");
+  }
+
+  try {
+    return await signInWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    if (e.code === "auth/user-not-found") {
+      throw new Error("No user found with this email address");
+    }
+    if (e.code === "auth/invalid-credential") {
+      throw new Error("Invalid email address or password");
+    }
+    if (e.code === "auth/too-many-requests") {
+      throw new Error("Too many requests. Try again later");
+    }
+
+    throw new Error(e.message);
+  }
+}
+
+export { signInWithEmail, signUpWithEmail };
