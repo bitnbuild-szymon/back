@@ -4,8 +4,8 @@ exports.signUpWithEmail = exports.signInWithEmail = void 0;
 const auth_1 = require("firebase/auth");
 const firestore_1 = require("firebase/firestore");
 async function signUpWithEmail(email, password, username) {
-    if (!email || !password) {
-        throw new Error("Email and password are required");
+    if (!email || !password || !username) {
+        throw new Error("Email, password and username are required");
     }
     // Validate email
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -28,9 +28,6 @@ async function signUpWithEmail(email, password, username) {
         throw new Error("Password must contain a special character");
     }
     // Validate username
-    if (!username) {
-        throw new Error("Username is required");
-    }
     if (username.length < 3) {
         throw new Error("Username must be at least 3 characters");
     }
@@ -66,6 +63,10 @@ async function signInWithEmail(email, password) {
     if (!email || !password) {
         throw new Error("Email and password are required");
     }
+    // Validate email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new Error("Invalid email address");
+    }
     const auth = (0, auth_1.getAuth)();
     if (!auth) {
         throw new Error("Internal server error");
@@ -87,6 +88,9 @@ async function signInWithEmail(email, password) {
         }
         if (e.code === "auth/too-many-requests") {
             throw new Error("Too many requests. Try again later");
+        }
+        if (e.code === "auth/invalid-email") {
+            throw new Error("Invalid email address");
         }
         throw new Error(e.message);
     }

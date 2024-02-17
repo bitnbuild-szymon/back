@@ -5,6 +5,7 @@ import {
   getDocs,
   getFirestore,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 import { Exercise, Workout } from "../types/workouts";
@@ -13,6 +14,13 @@ async function getWorkoutsIds(): Promise<string[]> {
   const db = getFirestore();
 
   const snap = await getDocs(collection(db, "workouts"));
+  return snap.docs.map((doc: any) => doc.id);
+}
+
+async function getExercisesIds(): Promise<string[]> {
+  const db = getFirestore();
+
+  const snap = await getDocs(collection(db, "exercises"));
   return snap.docs.map((doc: any) => doc.id);
 }
 
@@ -97,4 +105,31 @@ async function addExercise(exercise: Exercise): Promise<string> {
   return ref.id;
 }
 
-export { addExercise, addWorkout, getExercise, getWorkout, getWorkoutsIds };
+export {
+  addExercise,
+  addWorkout,
+  getExercise,
+  getExercisesIds,
+  getWorkout,
+  getWorkoutsIds,
+};
+
+async function ownWorkout(uid: string, id: string) {
+  const db = getFirestore();
+
+  const ref = doc(db, "users", uid);
+  await updateDoc(ref, {
+    ownedWorkouts: [id],
+  });
+}
+
+async function shareWorkout(uid: string, id: string) {
+  const db = getFirestore();
+
+  const ref = doc(db, "users", uid);
+  await updateDoc(ref, {
+    sharedWorkouts: [id],
+  });
+}
+
+export { ownWorkout, shareWorkout };

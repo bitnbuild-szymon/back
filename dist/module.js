@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUpWithEmail = exports.signInWithEmail = exports.init = exports.getWorkoutsIds = exports.getWorkout = exports.getExercise = exports.addWorkout = exports.addExercise = void 0;
+exports.signUpWithEmail = exports.signInWithEmail = exports.shareWorkout = exports.ownWorkout = exports.init = exports.getWorkoutsIds = exports.getWorkout = exports.getExercisesIds = exports.getExercise = exports.addWorkout = exports.addExercise = void 0;
 const init_1 = __importDefault(require("./src/init"));
 exports.init = init_1.default;
 const auth_1 = require("./src/auth");
@@ -13,5 +13,8 @@ const workouts_1 = require("./src/workouts");
 Object.defineProperty(exports, "addExercise", { enumerable: true, get: function () { return workouts_1.addExercise; } });
 Object.defineProperty(exports, "addWorkout", { enumerable: true, get: function () { return workouts_1.addWorkout; } });
 Object.defineProperty(exports, "getExercise", { enumerable: true, get: function () { return workouts_1.getExercise; } });
+Object.defineProperty(exports, "getExercisesIds", { enumerable: true, get: function () { return workouts_1.getExercisesIds; } });
 Object.defineProperty(exports, "getWorkout", { enumerable: true, get: function () { return workouts_1.getWorkout; } });
 Object.defineProperty(exports, "getWorkoutsIds", { enumerable: true, get: function () { return workouts_1.getWorkoutsIds; } });
+Object.defineProperty(exports, "ownWorkout", { enumerable: true, get: function () { return workouts_1.ownWorkout; } });
+Object.defineProperty(exports, "shareWorkout", { enumerable: true, get: function () { return workouts_1.shareWorkout; } });
