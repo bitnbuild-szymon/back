@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-async function signUpWithEmail(email, password) {
+async function signUpWithEmail(email: string, password: string) {
   if (!email || !password) {
     throw new Error("Email and password are required");
   }
@@ -48,7 +48,7 @@ async function signUpWithEmail(email, password) {
   }
 }
 
-async function signInWithEmail(email, password) {
+async function signInWithEmail(email: string, password: string) {
   if (!email || !password) {
     throw new Error("Email and password are required");
   }

@@ -2,11 +2,15 @@
   "name": "bitnbuild-back",
   "version": "1.0.0",
   "description": "",
-  "main": "module.ts",
-  "scripts": {},
+  "main": "./dist/module.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch-build": "tsc -w -p tsconfig.json"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^10.8.0"
+    "firebase": "^10.8.0",
+    "typescript": "^5.3.3"
   }
 }
