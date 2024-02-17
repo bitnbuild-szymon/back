@@ -8,6 +8,7 @@ export interface Workout {
 // {
 //     name: "upper body",
 //     description: "",
+//     breakTime: 20,
 //     muscles: {
 //         biceps: 1,
 //         chest: 0,
@@ -27,6 +28,7 @@ export interface Exercise {
   id?: string;
   name: string;
   description: string;
+  breakTime: number;
   muscles: { [key: string]: number };
   sets: ExerciseSet[];
 }

@@ -51,6 +51,7 @@ async function getExercise(id: string): Promise<Exercise> {
       id: exerciseSnap.id,
       name: data.name,
       description: data.description,
+      breakTime: data.breakTime,
       muscles: data.muscles,
       sets: data.sets,
     } as Exercise;
@@ -88,6 +89,7 @@ async function addExercise(exercise: Exercise): Promise<string> {
   await setDoc(ref, {
     name: exercise.name,
     description: exercise.description,
+    breakTime: exercise.breakTime,
     muscles: exercise.muscles,
     sets: exercise.sets,
   });
