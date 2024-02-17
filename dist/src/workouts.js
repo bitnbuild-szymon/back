@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getWorkoutsIds = exports.getWorkout = exports.getExercise = void 0;
+exports.getWorkoutsIds = exports.getWorkout = exports.getExercise = exports.addWorkout = exports.addExercise = void 0;
 const firestore_1 = require("firebase/firestore");
 async function getWorkoutsIds() {
     const db = (0, firestore_1.getFirestore)();
@@ -47,3 +47,35 @@ async function getExercise(id) {
     }
 }
 exports.getExercise = getExercise;
+async function addWorkout(workout) {
+    const db = (0, firestore_1.getFirestore)();
+    const exercises = [];
+    for (const exercise of workout.exercises) {
+        if (exercise.id) {
+            exercises.push((0, firestore_1.doc)(db, "exercises", exercise.id));
+        }
+        else {
+            const exerciseId = await addExercise(exercise);
+            exercises.push((0, firestore_1.doc)(db, "exercise", exerciseId));
+        }
+    }
+    const ref = (0, firestore_1.doc)((0, firestore_1.collection)(db, "workouts"));
+    await (0, firestore_1.setDoc)(ref, {
+        name: workout.name,
+        exercises,
+    });
+    return ref.id;
+}
+exports.addWorkout = addWorkout;
+async function addExercise(exercise) {
+    const db = (0, firestore_1.getFirestore)();
+    const ref = (0, firestore_1.doc)((0, firestore_1.collection)(db, "exercises"));
+    await (0, firestore_1.setDoc)(ref, {
+        name: exercise.name,
+        description: exercise.description,
+        muscles: exercise.muscles,
+        sets: exercise.sets,
+    });
+    return ref.id;
+}
+exports.addExercise = addExercise;

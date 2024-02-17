@@ -4,18 +4,19 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  setDoc,
 } from "firebase/firestore";
 
 import { Exercise, Workout } from "../types/workouts";
 
-async function getWorkoutsIds() {
+async function getWorkoutsIds(): Promise<string[]> {
   const db = getFirestore();
 
   const snap = await getDocs(collection(db, "workouts"));
   return snap.docs.map((doc: any) => doc.id);
 }
 
-async function getWorkout(id: string) {
+async function getWorkout(id: string): Promise<Workout> {
   const db = getFirestore();
 
   const workoutSnap = await getDoc(doc(db, "workouts", id));
@@ -39,7 +40,7 @@ async function getWorkout(id: string) {
   }
 }
 
-async function getExercise(id: string) {
+async function getExercise(id: string): Promise<Exercise> {
   const db = getFirestore();
 
   const exerciseSnap = await getDoc(doc(db, "exercises", id));
@@ -58,4 +59,40 @@ async function getExercise(id: string) {
   }
 }
 
-export { getExercise, getWorkout, getWorkoutsIds };
+async function addWorkout(workout: Workout): Promise<string> {
+  const db = getFirestore();
+
+  const exercises = [];
+  for (const exercise of workout.exercises) {
+    if (exercise.id) {
+      exercises.push(doc(db, "exercises", exercise.id));
+    } else {
+      const exerciseId = await addExercise(exercise);
+      exercises.push(doc(db, "exercise", exerciseId));
+    }
+  }
+
+  const ref = doc(collection(db, "workouts"));
+  await setDoc(ref, {
+    name: workout.name,
+    exercises,
+  });
+
+  return ref.id;
+}
+
+async function addExercise(exercise: Exercise): Promise<string> {
+  const db = getFirestore();
+
+  const ref = doc(collection(db, "exercises"));
+  await setDoc(ref, {
+    name: exercise.name,
+    description: exercise.description,
+    muscles: exercise.muscles,
+    sets: exercise.sets,
+  });
+
+  return ref.id;
+}
+
+export { addExercise, addWorkout, getExercise, getWorkout, getWorkoutsIds };
