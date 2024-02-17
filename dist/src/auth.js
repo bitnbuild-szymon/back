@@ -76,7 +76,7 @@ async function signInWithEmail(email, password) {
     }
     try {
         const firebaseUser = await (0, auth_1.signInWithEmailAndPassword)(auth, email, password);
-        const userProfile = await getProfile(firebaseUser.user.uid);
+        const userProfile = await getUser(firebaseUser.user.uid);
         return {
             firebaseUser,
             userProfile,
@@ -105,19 +105,6 @@ async function createProfile(uid, user) {
         username: user.username,
     });
 }
-async function getProfile(uid) {
-    const db = (0, firestore_1.getFirestore)();
-    const userSnap = await (0, firestore_1.getDoc)((0, firestore_1.doc)(db, "users", uid));
-    const data = userSnap.data();
-    return {
-        id: userSnap.id,
-        email: data.email,
-        username: data.username,
-        ownedWorkouts: data.ownedWorkouts,
-        sharedWorkouts: data.sharedWorkouts,
-        friends: data.friends,
-    };
-}
 async function getUsersIds() {
     const db = (0, firestore_1.getFirestore)();
     const users = await (0, firestore_1.getDocs)((0, firestore_1.collection)(db, "users"));
@@ -132,6 +119,8 @@ async function getUser(uid) {
         return {
             id: user.id,
             username: data.username,
+            ownedWorkouts: data.ownedWorkouts,
+            sharedWorkouts: data.sharedWorkouts,
             friends: data.friends,
         };
     }

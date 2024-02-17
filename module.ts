@@ -10,14 +10,14 @@ import {
 import {
   addExercise,
   addOwnedWorkouts,
-  addSharedWorkouts,
   addWorkout,
   getExercise,
   getExercisesIds,
   getOwnedWorkoutsIds,
-  getSharedWorkoutsIds,
+  getSharedWorkouts,
   getWorkout,
   getWorkoutsIds,
+  shareWorkouts,
 } from "./src/workouts";
 import { getRandomQuote } from "./src/quotes";
 
@@ -25,19 +25,19 @@ export {
   addExercise,
   addFriend,
   addOwnedWorkouts,
-  addSharedWorkouts,
   addWorkout,
   getExercise,
   getExercisesIds,
   getFriendsIds,
   getOwnedWorkoutsIds,
   getRandomQuote,
-  getSharedWorkoutsIds,
+  getSharedWorkouts,
   getUser,
   getUsersIds,
   getWorkout,
   getWorkoutsIds,
   init,
+  shareWorkouts,
   signInWithEmail,
   signUpWithEmail,
 };

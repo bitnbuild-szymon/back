@@ -117,7 +117,7 @@ async function signInWithEmail(email: string, password: string): Promise<{
       email,
       password,
     );
-    const userProfile = await getProfile(firebaseUser.user.uid);
+    const userProfile = await getUser(firebaseUser.user.uid);
 
     return {
       firebaseUser,
@@ -151,21 +151,6 @@ async function createProfile(
     username: user.username,
   });
 }
-async function getProfile(uid: string): Promise<UserProfile> {
-  const db = getFirestore();
-
-  const userSnap = await getDoc(doc(db, "users", uid));
-
-  const data = userSnap.data();
-  return {
-    id: userSnap.id,
-    email: data!.email,
-    username: data!.username,
-    ownedWorkouts: data!.ownedWorkouts,
-    sharedWorkouts: data!.sharedWorkouts,
-    friends: data!.friends,
-  } as UserProfile;
-}
 
 export { signInWithEmail, signUpWithEmail };
 
@@ -185,6 +170,8 @@ async function getUser(uid: string): Promise<UserProfile> {
     return {
       id: user.id,
       username: data.username,
+      ownedWorkouts: data.ownedWorkouts,
+      sharedWorkouts: data.sharedWorkouts,
       friends: data.friends,
     } as UserProfile;
   } else {

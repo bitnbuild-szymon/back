@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSharedWorkoutsIds = exports.getOwnedWorkoutsIds = exports.addSharedWorkouts = exports.addOwnedWorkouts = exports.getWorkoutsIds = exports.getWorkout = exports.getExercisesIds = exports.getExercise = exports.addWorkout = exports.addExercise = void 0;
+exports.shareWorkouts = exports.getSharedWorkouts = exports.getOwnedWorkoutsIds = exports.addOwnedWorkouts = exports.getWorkoutsIds = exports.getWorkout = exports.getExercisesIds = exports.getExercise = exports.addWorkout = exports.addExercise = void 0;
 const firestore_1 = require("firebase/firestore");
 async function getWorkoutsIds() {
     const db = (0, firestore_1.getFirestore)();
@@ -94,13 +94,6 @@ async function getOwnedWorkoutsIds(uid) {
     return (data === null || data === void 0 ? void 0 : data.ownedWorkouts) || [];
 }
 exports.getOwnedWorkoutsIds = getOwnedWorkoutsIds;
-async function getSharedWorkoutsIds(uid) {
-    const db = (0, firestore_1.getFirestore)();
-    const userSnap = await (0, firestore_1.getDoc)((0, firestore_1.doc)(db, "users", uid));
-    const data = userSnap.data();
-    return (data === null || data === void 0 ? void 0 : data.sharedWorkouts) || [];
-}
-exports.getSharedWorkoutsIds = getSharedWorkoutsIds;
 async function addOwnedWorkouts(uid, ids) {
     const db = (0, firestore_1.getFirestore)();
     const wkts = await getOwnedWorkoutsIds(uid);
@@ -111,13 +104,20 @@ async function addOwnedWorkouts(uid, ids) {
     });
 }
 exports.addOwnedWorkouts = addOwnedWorkouts;
-async function addSharedWorkouts(uid, ids) {
+async function getSharedWorkouts(uid) {
     const db = (0, firestore_1.getFirestore)();
-    const wkts = await getSharedWorkoutsIds(uid);
-    const os = new Set([...wkts, ...ids]);
-    const ref = (0, firestore_1.doc)(db, "users", uid);
+    const userSnap = await (0, firestore_1.getDoc)((0, firestore_1.doc)(db, "users", uid));
+    const data = userSnap.data();
+    return (data === null || data === void 0 ? void 0 : data.sharedWorkouts) || [];
+}
+exports.getSharedWorkouts = getSharedWorkouts;
+async function shareWorkouts(to_uid, by, ids) {
+    const db = (0, firestore_1.getFirestore)();
+    const wkts = await getSharedWorkouts(to_uid);
+    const os = wkts.concat(ids.map((id) => ({ id, by })));
+    const ref = (0, firestore_1.doc)(db, "users", to_uid);
     await (0, firestore_1.updateDoc)(ref, {
-        sharedWorkouts: [...os],
+        sharedWorkouts: os,
     });
 }
-exports.addSharedWorkouts = addSharedWorkouts;
+exports.shareWorkouts = shareWorkouts;
