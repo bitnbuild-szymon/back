@@ -13,6 +13,7 @@
     "include": [
         "module.ts",
         "src/**/*.ts",
+        "types/**/*.ts",
         "frebase-config.json"
     ]
 }

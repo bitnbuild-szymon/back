@@ -1,20 +1,24 @@
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 import firebaseConfig from "../firebase-config.json";
 
-function init() {
+async function init() {
   const app = initializeApp(firebaseConfig);
   console.log("Firebase initialized");
 
-  if (isSupported()) {
+  const db = getFirestore(app);
+  console.log("Firebase firestore initialized");
+
+  if (await isSupported()) {
     const analytics = getAnalytics(app);
     console.log("Firebase analytics initialized");
 
-    return { app, analytics };
+    return { app, db, analytics };
   }
 
-  return { app, analytics: null };
+  return { app, db, analytics: null };
 }
 
 export default init;
