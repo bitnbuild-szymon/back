@@ -1,5 +1,12 @@
 import init from "./src/init";
 import { signInWithEmail, signUpWithEmail } from "./src/auth";
-import { getWorkout, getWorkoutsIds } from "./src/workouts";
+import { getExercise, getWorkout, getWorkoutsIds } from "./src/workouts";
 
-export { getWorkout, getWorkoutsIds, init, signInWithEmail, signUpWithEmail };
+export {
+  getExercise,
+  getWorkout,
+  getWorkoutsIds,
+  init,
+  signInWithEmail,
+  signUpWithEmail,
+};

@@ -22,17 +22,40 @@ async function getWorkout(id: string) {
 
   if (workoutSnap.exists()) {
     const data = workoutSnap.data();
-    const exercisesSnap = await getDoc(data.exercises[0]);
+
+    const exercises = [];
+    for (const exercise of data.exercises) {
+      const exerciseData = await getExercise(exercise.id);
+      exercises.push(exerciseData);
+    }
 
     return {
       id: workoutSnap.id,
       name: data.name,
-      exercises:
-        (exercisesSnap.exists() ? exercisesSnap.data() : []) as Exercise[],
+      exercises,
     } as Workout;
   } else {
     throw new Error("Document not found");
   }
 }
 
-export { getWorkout, getWorkoutsIds };
+async function getExercise(id: string) {
+  const db = getFirestore();
+
+  const exerciseSnap = await getDoc(doc(db, "exercises", id));
+
+  if (exerciseSnap.exists()) {
+    const data = exerciseSnap.data();
+    return {
+      id: exerciseSnap.id,
+      name: data.name,
+      description: data.description,
+      muscles: data.muscles,
+      sets: data.sets,
+    } as Exercise;
+  } else {
+    throw new Error("Document not found");
+  }
+}
+
+export { getExercise, getWorkout, getWorkoutsIds };

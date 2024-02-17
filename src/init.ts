@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
-import firebaseConfig from "../firebase-config.json";
+import firebaseConfig from "../configs/firebase-config.json";
 
 async function init() {
   const app = initializeApp(firebaseConfig);

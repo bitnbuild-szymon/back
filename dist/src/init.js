@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = require("firebase/app");
 const firestore_1 = require("firebase/firestore");
 const analytics_1 = require("firebase/analytics");
-const firebase_config_json_1 = __importDefault(require("../firebase-config.json"));
+const firebase_config_json_1 = __importDefault(require("../configs/firebase-config.json"));
 async function init() {
     const app = (0, app_1.initializeApp)(firebase_config_json_1.default);
     console.log("Firebase initialized");
