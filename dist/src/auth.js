@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signUpWithEmail = exports.signInWithEmail = void 0;
 const auth_1 = require("firebase/auth");
-async function signUpWithEmail(email, password) {
+const firestore_1 = require("firebase/firestore");
+async function signUpWithEmail(email, password, username) {
     if (!email || !password) {
         throw new Error("Email and password are required");
     }
@@ -26,12 +27,32 @@ async function signUpWithEmail(email, password) {
     if (!/[!@#$%^&*]/.test(password)) {
         throw new Error("Password must contain a special character");
     }
+    // Validate username
+    if (!username) {
+        throw new Error("Username is required");
+    }
+    if (username.length < 3) {
+        throw new Error("Username must be at least 3 characters");
+    }
+    if (username.length > 20) {
+        throw new Error("Username must be at most 20 characters");
+    }
     const auth = (0, auth_1.getAuth)();
     if (!auth) {
         throw new Error("Internal server error");
     }
     try {
-        return await (0, auth_1.createUserWithEmailAndPassword)(auth, email, password);
+        const firebaseUser = await (0, auth_1.createUserWithEmailAndPassword)(auth, email, password);
+        const userProfile = {
+            id: firebaseUser.user.uid,
+            email,
+            username,
+        };
+        await createProfile(firebaseUser.user.uid, userProfile);
+        return {
+            firebaseUser,
+            userProfile,
+        };
     }
     catch (e) {
         if (e.code === "auth/email-already-in-use") {
@@ -50,7 +71,12 @@ async function signInWithEmail(email, password) {
         throw new Error("Internal server error");
     }
     try {
-        return await (0, auth_1.signInWithEmailAndPassword)(auth, email, password);
+        const firebaseUser = await (0, auth_1.signInWithEmailAndPassword)(auth, email, password);
+        const userProfile = await getProfile(firebaseUser.user.uid);
+        return {
+            firebaseUser,
+            userProfile,
+        };
     }
     catch (e) {
         if (e.code === "auth/user-not-found") {
@@ -66,3 +92,19 @@ async function signInWithEmail(email, password) {
     }
 }
 exports.signInWithEmail = signInWithEmail;
+async function createProfile(uid, user) {
+    const db = (0, firestore_1.getFirestore)();
+    await (0, firestore_1.setDoc)((0, firestore_1.doc)(db, "users", uid), {
+        username: user.username,
+    });
+}
+async function getProfile(uid) {
+    const db = (0, firestore_1.getFirestore)();
+    const userSnap = await (0, firestore_1.getDoc)((0, firestore_1.doc)(db, "users", uid));
+    const data = userSnap.data();
+    return {
+        id: userSnap.id,
+        email: data.email,
+        username: data.username,
+    };
+}

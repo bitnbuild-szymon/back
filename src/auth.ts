@@ -3,8 +3,18 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
-async function signUpWithEmail(email: string, password: string) {
+import { UserProfile } from "../types/auth";
+
+async function signUpWithEmail(
+  email: string,
+  password: string,
+  username: string,
+): Promise<{
+  firebaseUser: any;
+  userProfile: UserProfile;
+}> {
   if (!email || !password) {
     throw new Error("Email and password are required");
   }
@@ -31,6 +41,17 @@ async function signUpWithEmail(email: string, password: string) {
     throw new Error("Password must contain a special character");
   }
 
+  // Validate username
+  if (!username) {
+    throw new Error("Username is required");
+  }
+  if (username.length < 3) {
+    throw new Error("Username must be at least 3 characters");
+  }
+  if (username.length > 20) {
+    throw new Error("Username must be at most 20 characters");
+  }
+
   const auth = getAuth();
 
   if (!auth) {
@@ -38,7 +59,22 @@ async function signUpWithEmail(email: string, password: string) {
   }
 
   try {
-    return await createUserWithEmailAndPassword(auth, email, password);
+    const firebaseUser = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const userProfile = {
+      id: firebaseUser.user.uid,
+      email,
+      username,
+    };
+    await createProfile(firebaseUser.user.uid, userProfile);
+
+    return {
+      firebaseUser,
+      userProfile,
+    };
   } catch (e) {
     if (e.code === "auth/email-already-in-use") {
       throw new Error("Email address is already in use");
@@ -48,7 +84,10 @@ async function signUpWithEmail(email: string, password: string) {
   }
 }
 
-async function signInWithEmail(email: string, password: string) {
+async function signInWithEmail(email: string, password: string): Promise<{
+  firebaseUser: any;
+  userProfile: UserProfile;
+}> {
   if (!email || !password) {
     throw new Error("Email and password are required");
   }
@@ -60,7 +99,17 @@ async function signInWithEmail(email: string, password: string) {
   }
 
   try {
-    return await signInWithEmailAndPassword(auth, email, password);
+    const firebaseUser = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const userProfile = await getProfile(firebaseUser.user.uid);
+
+    return {
+      firebaseUser,
+      userProfile,
+    };
   } catch (e) {
     if (e.code === "auth/user-not-found") {
       throw new Error("No user found with this email address");
@@ -74,6 +123,29 @@ async function signInWithEmail(email: string, password: string) {
 
     throw new Error(e.message);
   }
+}
+
+async function createProfile(
+  uid: string,
+  user: UserProfile,
+) {
+  const db = getFirestore();
+
+  await setDoc(doc(db, "users", uid), {
+    username: user.username,
+  });
+}
+async function getProfile(uid: string): Promise<UserProfile> {
+  const db = getFirestore();
+
+  const userSnap = await getDoc(doc(db, "users", uid));
+
+  const data = userSnap.data();
+  return {
+    id: userSnap.id,
+    email: data!.email,
+    username: data!.username,
+  } as UserProfile;
 }
 
 export { signInWithEmail, signUpWithEmail };
