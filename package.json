@@ -1,0 +1,12 @@
+{
+  "name": "bitnbuild-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "module.ts",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^10.8.0"
+  }
+}
