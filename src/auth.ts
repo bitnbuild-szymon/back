@@ -15,8 +15,8 @@ async function signUpWithEmail(
   firebaseUser: any;
   userProfile: UserProfile;
 }> {
-  if (!email || !password) {
-    throw new Error("Email and password are required");
+  if (!email || !password || !username) {
+    throw new Error("Email, password and username are required");
   }
 
   // Validate email
@@ -42,9 +42,6 @@ async function signUpWithEmail(
   }
 
   // Validate username
-  if (!username) {
-    throw new Error("Username is required");
-  }
   if (username.length < 3) {
     throw new Error("Username must be at least 3 characters");
   }
@@ -92,6 +89,11 @@ async function signInWithEmail(email: string, password: string): Promise<{
     throw new Error("Email and password are required");
   }
 
+  // Validate email
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error("Invalid email address");
+  }
+
   const auth = getAuth();
 
   if (!auth) {
@@ -119,6 +121,9 @@ async function signInWithEmail(email: string, password: string): Promise<{
     }
     if (e.code === "auth/too-many-requests") {
       throw new Error("Too many requests. Try again later");
+    }
+    if (e.code === "auth/invalid-email") {
+      throw new Error("Invalid email address");
     }
 
     throw new Error(e.message);
