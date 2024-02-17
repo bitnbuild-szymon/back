@@ -44,6 +44,9 @@ async function signUpWithEmail(email, password, username) {
             id: firebaseUser.user.uid,
             email,
             username,
+            ownedWorkouts: [],
+            sharedWorkouts: [],
+            friends: [],
         };
         await createProfile(firebaseUser.user.uid, userProfile);
         return {
@@ -110,6 +113,9 @@ async function getProfile(uid) {
         id: userSnap.id,
         email: data.email,
         username: data.username,
+        ownedWorkouts: data.ownedWorkouts,
+        sharedWorkouts: data.sharedWorkouts,
+        friends: data.friends,
     };
 }
 async function getUsersIds() {
@@ -126,6 +132,7 @@ async function getUser(uid) {
         return {
             id: user.id,
             username: data.username,
+            friends: data.friends,
         };
     }
     else {

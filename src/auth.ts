@@ -73,6 +73,9 @@ async function signUpWithEmail(
       id: firebaseUser.user.uid,
       email,
       username,
+      ownedWorkouts: [],
+      sharedWorkouts: [],
+      friends: [],
     };
     await createProfile(firebaseUser.user.uid, userProfile);
 
@@ -158,6 +161,9 @@ async function getProfile(uid: string): Promise<UserProfile> {
     id: userSnap.id,
     email: data!.email,
     username: data!.username,
+    ownedWorkouts: data!.ownedWorkouts,
+    sharedWorkouts: data!.sharedWorkouts,
+    friends: data!.friends,
   } as UserProfile;
 }
 
@@ -179,6 +185,7 @@ async function getUser(uid: string): Promise<UserProfile> {
     return {
       id: user.id,
       username: data.username,
+      friends: data.friends,
     } as UserProfile;
   } else {
     throw new Error("User not found");

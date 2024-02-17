@@ -19,6 +19,7 @@ import {
   getWorkout,
   getWorkoutsIds,
 } from "./src/workouts";
+import { getRandomQuote } from "./src/quotes";
 
 export {
   addExercise,
@@ -30,6 +31,7 @@ export {
   getExercisesIds,
   getFriendsIds,
   getOwnedWorkoutsIds,
+  getRandomQuote,
   getSharedWorkoutsIds,
   getUser,
   getUsersIds,
