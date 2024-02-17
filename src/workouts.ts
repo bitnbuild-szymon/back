@@ -114,22 +114,48 @@ export {
   getWorkoutsIds,
 };
 
-async function ownWorkout(uid: string, id: string) {
+async function getOwnedWorkoutsIds(uid: string): Promise<string[]> {
   const db = getFirestore();
+  const userSnap = await getDoc(doc(db, "users", uid));
+
+  const data = userSnap.data();
+  return data?.ownedWorkouts || [];
+}
+async function getSharedWorkoutsIds(uid: string): Promise<string[]> {
+  const db = getFirestore();
+  const userSnap = await getDoc(doc(db, "users", uid));
+
+  const data = userSnap.data();
+  return data?.sharedWorkouts || [];
+}
+
+async function addOwnedWorkouts(uid: string, ids: string[]) {
+  const db = getFirestore();
+
+  const wkts = await getOwnedWorkoutsIds(uid);
+  const os = new Set([...wkts, ...ids]);
 
   const ref = doc(db, "users", uid);
   await updateDoc(ref, {
-    ownedWorkouts: [id],
+    ownedWorkouts: [...os],
   });
 }
 
-async function shareWorkout(uid: string, id: string) {
+async function addSharedWorkouts(uid: string, ids: string[]) {
   const db = getFirestore();
+
+  const wkts = await getSharedWorkoutsIds(uid);
+  const os = new Set([...wkts, ...ids]);
 
   const ref = doc(db, "users", uid);
   await updateDoc(ref, {
-    sharedWorkouts: [id],
+    sharedWorkouts: [...os],
   });
 }
 
-export { ownWorkout, shareWorkout };
+export {
+  addOwnedWorkouts,
+  addSharedWorkouts,
+  getOwnedWorkoutsIds,
+  getSharedWorkoutsIds,
+};
