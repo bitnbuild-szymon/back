@@ -38,6 +38,7 @@ async function getExercise(id) {
             id: exerciseSnap.id,
             name: data.name,
             description: data.description,
+            breakTime: data.breakTime,
             muscles: data.muscles,
             sets: data.sets,
         };
@@ -73,6 +74,7 @@ async function addExercise(exercise) {
     await (0, firestore_1.setDoc)(ref, {
         name: exercise.name,
         description: exercise.description,
+        breakTime: exercise.breakTime,
         muscles: exercise.muscles,
         sets: exercise.sets,
     });
