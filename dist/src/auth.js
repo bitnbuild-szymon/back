@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUpWithEmail = exports.signInWithEmail = void 0;
+exports.getFriendsIds = exports.addFriend = exports.signUpWithEmail = exports.signInWithEmail = void 0;
 const auth_1 = require("firebase/auth");
 const firestore_1 = require("firebase/firestore");
 async function signUpWithEmail(email, password, username) {
@@ -112,3 +112,20 @@ async function getProfile(uid) {
         username: data.username,
     };
 }
+async function getFriendsIds(uid) {
+    const db = (0, firestore_1.getFirestore)();
+    const userSnap = await (0, firestore_1.getDoc)((0, firestore_1.doc)(db, "users", uid));
+    const data = userSnap.data();
+    return (data === null || data === void 0 ? void 0 : data.friends) || [];
+}
+exports.getFriendsIds = getFriendsIds;
+async function addFriend(uid, friendId) {
+    const db = (0, firestore_1.getFirestore)();
+    const friends = await getFriendsIds(uid);
+    const os = new Set(friends);
+    os.add(friendId);
+    await (0, firestore_1.updateDoc)((0, firestore_1.doc)(db, "users", uid), {
+        friends: [...os],
+    });
+}
+exports.addFriend = addFriend;

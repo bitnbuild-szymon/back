@@ -1,5 +1,10 @@
 import init from "./src/init";
-import { signInWithEmail, signUpWithEmail } from "./src/auth";
+import {
+  addFriend,
+  getFriendsIds,
+  signInWithEmail,
+  signUpWithEmail,
+} from "./src/auth";
 import {
   addExercise,
   addOwnedWorkouts,
@@ -15,11 +20,13 @@ import {
 
 export {
   addExercise,
+  addFriend,
   addOwnedWorkouts,
   addSharedWorkouts,
   addWorkout,
   getExercise,
   getExercisesIds,
+  getFriendsIds,
   getOwnedWorkoutsIds,
   getSharedWorkoutsIds,
   getWorkout,

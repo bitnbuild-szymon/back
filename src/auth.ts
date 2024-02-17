@@ -3,7 +3,13 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 import { UserProfile } from "../types/auth";
 
@@ -154,3 +160,25 @@ async function getProfile(uid: string): Promise<UserProfile> {
 }
 
 export { signInWithEmail, signUpWithEmail };
+
+async function getFriendsIds(uid: string): Promise<string[]> {
+  const db = getFirestore();
+
+  const userSnap = await getDoc(doc(db, "users", uid));
+  const data = userSnap.data();
+
+  return data?.friends || [];
+}
+async function addFriend(uid: string, friendId: string) {
+  const db = getFirestore();
+
+  const friends = await getFriendsIds(uid);
+  const os = new Set(friends);
+  os.add(friendId);
+
+  await updateDoc(doc(db, "users", uid), {
+    friends: [...os],
+  });
+}
+
+export { addFriend, getFriendsIds };
